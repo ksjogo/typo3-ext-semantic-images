@@ -1,0 +1,2 @@
+# cat=basic; type=string; label=Were the remote host lies
+remoteHost = http://mimir:8080/

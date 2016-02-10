@@ -1,0 +1,24 @@
+{
+    "name": "dkd/semantic_images",
+    "type": "typo3-cms-extension",
+    "description": "TYPO3 Semantic Images",
+    "keywords": ["semantic", "images"],
+    "homepage": "https://github.com/ksjogo/typo3-ext-semantic-images",
+    "license": "GPL-2.0",
+    "authors": [
+        {
+            "name": "Johannes Goslar",
+            "homepage": "http://www.dkd.de",
+            "role": "Developer"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "Dkd\\SemanticImages\\": "Classes/"
+        }
+    },
+    "require": {
+        "typo3/cms": "^7.6",
+        "guzzlehttp/guzzle": "~5.0"
+    }
+}
