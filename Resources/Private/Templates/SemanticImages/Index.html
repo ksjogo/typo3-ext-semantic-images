@@ -3,16 +3,15 @@
 
 <f:section name="main">
     <annotate:RequireJS />
-    <div id="searchMountpoint">
+    <div id="mountpoint">
     </div>
     <script type="text/javascript">
-     /* require([
-        'TYPO3/CMS/Annotate/SearchApi',
-        ], function(
-        SearchApi
-        ){
-        SearchApi.show(document.getElementById("searchMountpoint"));
-        }); */
-     console.log("     hello");
+     require([
+         'TYPO3/CMS/SemanticImages/SemanticImagesApi',
+     ], function(
+         SemanticImagesApi
+     ){
+        SemanticImagesApi.show(document.getElementById("mountpoint"));
+     });
     </script>
 </f:section>

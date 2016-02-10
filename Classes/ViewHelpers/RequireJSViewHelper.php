@@ -1,5 +1,5 @@
 <?php
-namespace Dkd\Annotate\ViewHelpers;
+namespace Dkd\SemanticImages\ViewHelpers;
 
 class RequireJSViewHelper extends  \TYPO3\CMS\Fluid\ViewHelpers\Be\AbstractBackendViewHelper {
 
