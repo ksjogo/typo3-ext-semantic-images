@@ -7,17 +7,17 @@ if (TYPO3_MODE === 'BE')
     \TYPO3\CMS\Extbase\Utility\ExtensionUtility::registerModule(
         'Dkd.' . $_EXTKEY,
         'file',
-        'SemanticImages',
+        'semanticimages',
         '',
         array(
-            'SemanticImages' => 'index',
+            'FileList' => 'index, search',
         ),
         array(
             'access' => 'user,group',
             'icon'   => 'EXT:' . $_EXTKEY . '/ext_icon.gif',
-            'labels' => 'LLL:EXT:' . $_EXTKEY . '/Resources/Private/Language/locallang.xlf',
+            'labels' => 'LLL:EXT:lang/locallang_mod_file_list.xlf'
         )
     );
 }
 
-\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addStaticFile($_EXTKEY, 'Configuration/TypoScript', 'SemanticImages');
+\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addStaticFile($_EXTKEY, 'Configuration/TypoScript', 'Semantic Images');

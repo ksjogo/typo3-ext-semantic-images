@@ -1,17 +1,23 @@
 [global]
 
-module.tx_semantic_images{
+module.tx_semanticimages{
   view {
-    # cat=module.tx_semantic_images/file; type=string; label=Path to template root (BE)
-    templateRootPath = EXT:semantic_images/Resources/Private/Backend/Templates/
-    # cat=module.tx_semantic_images/file; type=string; label=Path to template partials (BE)
-    partialRootPath = EXT:semantic_images/Resources/Private/Backend/Partials/
-    # cat=module.tx_semantic_images/file; type=string; label=Path to template layouts (BE)
-    layoutRootPath = EXT:semantic_images/Resources/Private/Backend/Layouts/
+
+    layoutRootPaths {
+      10 = EXT:filelist/Resources/Private/Layouts
+      #      20 = EXT:semantic_images/Resources/Private/Layouts
+    }
+    partialRootPaths {
+      10 = EXT:filelist/Resources/Private/Partials
+      #      20 = EXT:semantic_images/Resources/Private/Partials
+    }
+    templateRootPaths {
+      10 = EXT:filelist/Resources/Private/Templates
+      #      20 = EXT:semantic_images/Resources/Private/Templates
+    }
   }
   persistence {
-    # cat=module.tx_semantic_iamges//a; type=string; label=Default storage PID
+    # cat=module.tx_semanticimages//a; type=string; label=Default storage PID
     storagePid =
   }
 }
-
