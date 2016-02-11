@@ -1,19 +1,19 @@
 [global]
 
-module.tx_semanticimages{
+plugin.tx_semanticimages{
   view {
 
     layoutRootPaths {
-      10 = EXT:filelist/Resources/Private/Layouts
-      #      20 = EXT:semantic_images/Resources/Private/Layouts
+      00 = EXT:filelist/Resources/Private/Layouts
+      10 = EXT:semantic_images/Resources/Private/Layouts
     }
     partialRootPaths {
-      10 = EXT:filelist/Resources/Private/Partials
-      #      20 = EXT:semantic_images/Resources/Private/Partials
+      0 = EXT:filelist/Resources/Private/Partials
+      10 = EXT:semantic_images/Resources/Private/Partials
     }
     templateRootPaths {
-      10 = EXT:filelist/Resources/Private/Templates
-      #      20 = EXT:semantic_images/Resources/Private/Templates
+      0 = EXT:filelist/Resources/Private/Templates
+      10 = EXT:semantic_images/Resources/Private/Templates
     }
   }
   persistence {

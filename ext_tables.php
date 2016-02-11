@@ -5,7 +5,7 @@ if (!defined('TYPO3_MODE'))
 if (TYPO3_MODE === 'BE')
 {
     \TYPO3\CMS\Extbase\Utility\ExtensionUtility::registerModule(
-        'Dkd.' . $_EXTKEY,
+        'Dkd.SemanticImages',
         'file',
         'semanticimages',
         '',

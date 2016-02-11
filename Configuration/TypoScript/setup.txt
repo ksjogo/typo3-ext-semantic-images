@@ -3,12 +3,15 @@
 # Module configuration
 plugin.tx_semanticimages {
   persistence {
-    storagePid = {$module.tx_semanticimages.persistence.storagePid}
+    storagePid = {$plugin.tx_semanticimages.persistence.storagePid}
   }
   view {
-    templateRootPaths = {$module.tx_semanticimages.view.templateRootPaths}
-    partialRootPaths = {$module.tx_semanticimages.view.partialRootPaths}
-    layoutRootPaths = {$module.tx_semanticimages.view.layoutRootPaths}
+    templateRootPaths.0 = {$plugin.tx_semanticimages.view.templateRootPaths.0}
+    templateRootPaths.10 = {$plugin.tx_semanticimages.view.templateRootPaths.10}
+    partialRootPaths.0 = {$plugin.tx_semanticimages.view.partialRootPaths.0}
+    partialRootPaths.10 = {$plugin.tx_semanticimages.view.partialRootPaths.10}
+    layoutRootPaths.0 = {$plugin.tx_semanticimages.view.layoutRootPaths.0}
+    layoutRootPaths.10 = {$plugin.tx_semanticimages.view.layoutRootPaths.10}
   }
 }
 
