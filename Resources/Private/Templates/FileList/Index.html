@@ -1,0 +1,17 @@
+{namespace annotate=Dkd\SemanticImages\ViewHelpers}
+<f:layout name="SemanticImages" />
+
+<f:section name="main">
+    <annotate:RequireJS />
+    <div id="mountpoint">
+    </div>
+    <script type="text/javascript">
+     require([
+         'TYPO3/CMS/SemanticImages/SemanticImagesApi',
+     ], function(
+         SemanticImagesApi
+     ){
+        SemanticImagesApi.show(document.getElementById("mountpoint"));
+     });
+    </script>
+</f:section>
