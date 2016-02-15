@@ -5,6 +5,10 @@ use TYPO3\CMS\Extbase\Mvc\View\ViewInterface;
 use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
 use TYPO3\CMS\Core\Messaging\FlashMessage;
 use TYPO3\CMS\Core\Type\Bitmask\JsConfirmation;
+use TYPO3\CMS\Core\Resource\FolderInterface;
+use TYPO3\CMS\Core\Resource\FileInterface;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
+use \ZipArchive;
 
 /**
  * Semantic Images FileListController Wrapper
@@ -13,34 +17,34 @@ use TYPO3\CMS\Core\Type\Bitmask\JsConfirmation;
  */
 class FileListController extends \TYPO3\CMS\Filelist\Controller\FileListController
 {
-	/**
-	 * The name of the module
-	 *
-	 * @var string
-	 */
-	protected $moduleName = 'file_semanticimages';
+    /**
+     * The name of the module
+     *
+     * @var string
+     */
+    protected $moduleName = 'file_semanticimages';
 
-	/**
-	 * Initialize the view
-	 *
-	 * @param ViewInterface $view The view
-	 * @return void
-	 */
-	public function initializeView(ViewInterface $view)
-	{
-		$property = new \ReflectionProperty($view, 'templateView');
-		$property->setAccessible(TRUE);
-		$templateView = $property->getValue($view);
+    /**
+     * Initialize the view
+     *
+     * @param ViewInterface $view The view
+     * @return void
+     */
+    public function initializeView(ViewInterface $view)
+    {
+        $property = new \ReflectionProperty($view, 'templateView');
+        $property->setAccessible(TRUE);
+        $templateView = $property->getValue($view);
 
-		$templateView->setTemplateRootPaths(array(
+        $templateView->setTemplateRootPaths(array(
             ExtensionManagementUtility::extPath('semantic_images', 'Resources/Private/Templates/'),
-			ExtensionManagementUtility::extPath('filelist', 'Resources/Private/Templates/'),
+            ExtensionManagementUtility::extPath('filelist', 'Resources/Private/Templates/'),
         ));
-		$templateView->setLayoutRootPaths(array(
+        $templateView->setLayoutRootPaths(array(
             ExtensionManagementUtility::extPath('semantic_images', 'Resources/Private/Layouts/'),
-			ExtensionManagementUtility::extPath('filelist', 'Resources/Private/Layouts/'),
+            ExtensionManagementUtility::extPath('filelist', 'Resources/Private/Layouts/'),
         ));
-		$templateView->setPartialRootPaths(array(
+        $templateView->setPartialRootPaths(array(
             ExtensionManagementUtility::extPath('semantic_images', 'Resources/Private/Partials/'),
             ExtensionManagementUtility::extPath('filelist', 'Resources/Private/Partials/'),
         ));
@@ -49,28 +53,29 @@ class FileListController extends \TYPO3\CMS\Filelist\Controller\FileListControll
 
         /** @var BackendTemplateView $view */
         parent::initializeView($view);
-	}
+    }
 
     /**
-     * Registers the Icons into the docheader
-     *
-     * @return void
-     * @throws \InvalidArgumentException
+     * Adapted behaviour from FileListController
+     * Disable all buttons
      */
     protected function registerDocHeaderButtons()
     {
     }
 
     /**
-     * Create the panel of buttons for submitting the form or otherwise perform operations.
-     *
+     * Adapted behaviour from FileListController
+     * Disable all buttons
      * @return array All available buttons as an assoc. array
      */
     protected function registerButtons()
     {
+        return [];
     }
 
     /**
+     * Adapted behaviour from FileListController
+     * Overwrite Headline
      * @return void
      */
     public function indexAction()
@@ -82,9 +87,10 @@ class FileListController extends \TYPO3\CMS\Filelist\Controller\FileListControll
     }
 
     /**
-     * Search for files by name and pass them with a facade to fluid
-     *
+     * Adapted behaviour from FileListController
+     * Semantically search for files by name and pass them with a facade to fluid
      * @param string $searchWord
+     * @return void
      */
     public function searchAction($searchWord = '')
     {
@@ -113,5 +119,54 @@ class FileListController extends \TYPO3\CMS\Filelist\Controller\FileListControll
         $this->view->assign('settings', [
             'jsConfirmationDelete' => $this->getBackendUser()->jsConfirmation(JsConfirmation::DELETE)
         ]);
+
+
+        $this->createZipArchiveForCurrentFolder();
     }
+
+
+
+
+
+    private function addToZip($fileOrFolder, $zip)
+    {
+        if ($fileOrFolder instanceof FolderInterface)
+        {
+            foreach($fileOrFolder->getFiles() as $file)
+                $this->addToZip($file, $zip);
+            foreach($fileOrFolder->getSubfolders() as $folder)
+                $this->addToZip($folder, $zip);
+        }
+        else if ($fileOrFolder instanceof FileInterface)
+        {
+            $path = $fileOrFolder->getParentFolder()->getReadablePath() . $fileOrFolder->getName();
+            $zip->addFromString($path, $fileOrFolder->getContents());
+        }
+
+
+    }
+
+    /**
+     * Build zip for current folder
+     * only supporting fileadmin for now
+     * @return void
+     */
+    private function createZipArchiveForCurrentFolder()
+    {
+        $ourName = 'si' . $this->folderObject->getName();
+        $filename = GeneralUtility::tempnam($ourName, '.zip');
+        error_log(var_export($filename,true));
+
+        $zip = new ZipArchive();
+        $zip->open($filename, ZipArchive::CREATE);
+        $this->addToZip($this->folderObject, $zip);
+        $zip->close();
+
+        //GeneralUtility::unlink_tempfile($fileName);
+    }
+
+
+
+
+
 }
