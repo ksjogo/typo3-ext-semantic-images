@@ -7,12 +7,14 @@ define('TYPO3/CMS/SemanticImages/UI', [
     'jquery',
     'TYPO3/CMS/SemanticImages/react',
     'TYPO3/CMS/SemanticImages/Remote',
-    'TYPO3/CMS/SemanticImages/Quality'
+    'TYPO3/CMS/SemanticImages/Quality',
+    'TYPO3/CMS/SemanticImages/Concepts'
 ], function (
     $,
     React,
     Remote,
-    Quality
+    Quality,
+    Concepts
 ) {
     return React.createClass({
         getInitialState: function(){
@@ -23,8 +25,8 @@ define('TYPO3/CMS/SemanticImages/UI', [
             return React.createElement('div', {},
                 // React.createElement('p', {}, this.props.name +  this.props.uid),
                 // React.createElement('br', {}),
-                // quality
-                React.createElement(Quality, {uid: this.props.uid})
+                React.createElement(Quality, {uid: this.props.uid}),
+                React.createElement(Concepts, {uid: this.props.uid})
                );
         }
     });

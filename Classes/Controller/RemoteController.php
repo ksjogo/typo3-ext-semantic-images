@@ -55,7 +55,6 @@ class RemoteController extends ActionController
             $displayName = (string) $node;
             $displayNames[$id] = $displayName;
         }
-        //var_dump($displayNames);
 
         $order = explode(' ',$qa->QualityMeasures_order);
         $scores = explode(' ', $qa->Image_QualityMeasures_List->Image->confidence_scores);
@@ -73,7 +72,7 @@ class RemoteController extends ActionController
             $result[$label] = $score;
         }
 
-        return json_encode($result);
+        return $result;
     }
 
     public function calculateQualityAjax(ServerRequestInterface $request, ResponseInterface $response)
@@ -83,7 +82,47 @@ class RemoteController extends ActionController
 
         $quality = $this->calculateQuality($uid);
 
-        $response->getBody()->write($quality);
+        $response->getBody()->write(json_encode($quality));
         return $response;
     }
+
+
+    public function calculateConcepts($uid)
+    {
+        $xml = $this->call('concept', $uid);
+
+        $qa = $xml->Concept_detection;
+
+        $displayNames = [];
+        foreach ($qa->Concepts_list->children() as $node)
+        {
+            $id = (string)$node->attributes()['id'];
+            $displayName = (string) $node;
+            $displayNames[$id] = $displayName;
+        }
+
+        $order = explode(' ',$qa->Concepts_order);
+        $scores = explode(' ', $qa->Image_Concepts_List->Image->confidence_scores);
+
+        for ($i = 0; $i < count($scores); $i++)
+        {
+            $score = $scores[$i];
+            $labelId = $order[$i];
+            $label = $displayNames[$labelId];
+            $result[$label] = $score;
+        }
+
+        return $result;
+    }
+
+    public function calculateConceptsAjax(ServerRequestInterface $request, ResponseInterface $response)
+{
+    $params = $request->getParsedBody();
+    $uid = $params['uid'];
+
+    $concepts = $this->calculateConcepts($uid);
+
+    $response->getBody()->write(json_encode($concepts));
+    return $response;
+}
 }

@@ -27,6 +27,17 @@ define('TYPO3/CMS/SemanticImages/Remote', [
                 fail(function(jqXHR, textStatus, errorThrown) {
                     cb(textStatus, null);
                 });
+        },
+        concepts: function(uid, cb)
+        {
+            $.post(this.route('semanticimages_concepts'), {uid: uid})
+                .done(function(data) {
+                    cb(null, data);
+                }).
+                fail(function(jqXHR, textStatus, errorThrown) {
+                    cb(textStatus, null);
+                });
         }
+
     };
 });
