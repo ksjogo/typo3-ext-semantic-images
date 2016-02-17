@@ -19,32 +19,43 @@ class RemoteController extends ActionController
     private function client()
     {
         $configuration = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('Dkd\\SemanticImages\\Configuration');
-        $remoteHost = $remoteHost->getRemoteHost();
+        $remoteHost = $configuration->getRemoteHost();
+        error_log($remoteHost);
         return new \GuzzleHttp\Client(['base_url' => $remoteHost]);
     }
 
-    public function calculateQuality($uid)
+
+    private function call($method, $uid)
     {
         $temp = Utility::copyToPublic($uid);
 
         $result = $this->client()->get('methodGET', ['query' => [
             'imagePaths' => $temp['url'],
-            'method' => 'quality'
+            'method' => $method
         ]]);
 
-        //Utility::decopyFromPublic($temp);
+        $xmlstring = (string) $result->getBody();
+        $xml = simplexml_load_string($xmlstring);
+        $json = json_encode($xml);
 
-        return $result->getBody();
+        Utility::decopyFromPublic($temp);
+
+        return $json;
+    }
+
+    public function calculateQuality($uid)
+    {
+        return $this->call('quality', $uid);
     }
 
     public function calculateQualityAjax(ServerRequestInterface $request, ResponseInterface $response)
-{
-    $params = $request->getParsedBody();
-    $uid = $params['uid'];
+    {
+        $params = $request->getParsedBody();
+        $uid = $params['uid'];
 
-    $quality = $this->calculateQuality($uid);
+        $quality = $this->calculateQuality($uid);
 
-    $response->getBody()->write(json_encode($quality));
-    return $response;
-}
+        $response->getBody()->write($quality);
+        return $response;
+    }
 }

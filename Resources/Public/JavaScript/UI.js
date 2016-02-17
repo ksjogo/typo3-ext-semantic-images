@@ -6,11 +6,13 @@
 define('TYPO3/CMS/SemanticImages/UI', [
     'jquery',
     'TYPO3/CMS/SemanticImages/react',
-    'TYPO3/CMS/SemanticImages/Remote'
+    'TYPO3/CMS/SemanticImages/Remote',
+    'TYPO3/CMS/SemanticImages/Quality'
 ], function (
     $,
     React,
-    Remote
+    Remote,
+    Quality
 ) {
     return React.createClass({
         getInitialState: function(){
@@ -30,8 +32,8 @@ define('TYPO3/CMS/SemanticImages/UI', [
                 React.createElement('p', {}, this.props.name +  this.props.uid),
                 React.createElement('br', {}),
                 // quality
-                React.createElement('p', {}, 'Quality:',
-                  this.state.quality != null ? this.state.quality : React.createElement('button', {onClick: this.onQuality}, 'calculate')
+                React.createElement('div', {}, 'Quality:',
+                  this.state.quality != null ? React.createElement(Quality, this.state.quality) : React.createElement('button', {onClick: this.onQuality}, 'calculate')
                  )
                );
         }
