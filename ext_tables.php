@@ -38,4 +38,4 @@ $GLOBALS['TCA']['sys_file_metadata']['columns']['semanticimage'] = array(
 	)
 );
 
-\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addToAllTCAtypes('sys_file_metadata', ',--div--;Semantic Image,semanticimage', '', '');
+\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addToAllTCAtypes('sys_file_metadata', ',--div--;Semantic Image,fileinfo,semanticimage', '', '');

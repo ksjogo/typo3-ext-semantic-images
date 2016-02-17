@@ -1,2 +1,2 @@
 # cat=basic; type=string; label=Were the remote host lies
-remoteHost = http://mimir:8080/
+remoteHost = http://multimedia.iti.gr:8080/ForgetITImageAnalysis_v3/EXTRACTOR/
