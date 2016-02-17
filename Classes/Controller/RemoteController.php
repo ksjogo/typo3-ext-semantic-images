@@ -34,18 +34,46 @@ class RemoteController extends ActionController
             'method' => $method
         ]]);
 
-        $xmlstring = (string) $result->getBody();
-        $xml = simplexml_load_string($xmlstring);
-        $json = json_encode($xml);
-
         Utility::decopyFromPublic($temp);
 
-        return $json;
+        $xmlstring = (string) $result->getBody();
+        $xml = simplexml_load_string($xmlstring);
+
+        return $xml;
     }
 
     public function calculateQuality($uid)
     {
-        return $this->call('quality', $uid);
+        $xml = $this->call('quality', $uid);
+
+        $qa = $xml->Quality_Assessment;
+
+        $displayNames = [];
+        foreach ($qa->QualityMeasures_list->children() as $node)
+        {
+            $id = (string)$node->attributes()['id'];
+            $displayName = (string) $node;
+            $displayNames[$id] = $displayName;
+        }
+        //var_dump($displayNames);
+
+        $order = explode(' ',$qa->QualityMeasures_order);
+        $scores = explode(' ', $qa->Image_QualityMeasures_List->Image->confidence_scores);
+        $quality = (string) $qa->Image_QualityMeasures_List->Image->imagequality_score;
+
+        $result = [
+            'Quality' => $quality,
+        ];
+
+        for ($i = 0; $i < count($scores); $i++)
+        {
+            $score = $scores[$i];
+            $labelId = $order[$i];
+            $label = $displayNames[$labelId];
+            $result[$label] = $score;
+        }
+
+        return json_encode($result);
     }
 
     public function calculateQualityAjax(ServerRequestInterface $request, ResponseInterface $response)
