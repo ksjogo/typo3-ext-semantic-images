@@ -101,9 +101,14 @@ class FileListController extends \TYPO3\CMS\Filelist\Controller\FileListControll
         }
 
         $temp = $this->createZipArchiveForCurrentFolder();
+        $text = Utility::createPublicTempFile('text','.text');
+
         $remoteController = GeneralUtility::makeInstance(RemoteController::class);
-        $uids = $remoteController->search($temp, $searchWord);
+        $uids = $remoteController->search($temp, $text);
+
         Utility::removePublicTempFile($temp);
+        Utility::removePublicTempFile($text);
+
 
         $files = array_map(function($uid){
             return Utility::uid2file($uid);

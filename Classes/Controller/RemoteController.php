@@ -16,15 +16,14 @@ use Dkd\SemanticImages\Utility;
  */
 class RemoteController extends ActionController
 {
-    private function client()
+    private function analysisClient()
     {
         $configuration = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('Dkd\\SemanticImages\\Configuration');
-        $remoteHost = $configuration->getRemoteHost();
+        $remoteHost = $configuration->getAnalysisHost();
         return new \GuzzleHttp\Client(['base_url' => $remoteHost]);
     }
 
-
-    private function call($method, $uid)
+    private function analysisCall($method, $uid)
     {
         $temp = Utility::copyToPublic($uid);
 
@@ -43,7 +42,7 @@ class RemoteController extends ActionController
 
     public function calculateQuality($uid)
     {
-        $xml = $this->call('quality', $uid);
+        $xml = $this->analysisCall('quality', $uid);
 
         $qa = $xml->Quality_Assessment;
 
@@ -88,7 +87,7 @@ class RemoteController extends ActionController
 
     public function calculateConcepts($uid)
     {
-        $xml = $this->call('concept', $uid);
+        $xml = $this->analysisCall('concept', $uid);
 
         $qa = $xml->Concept_detection;
 
@@ -125,8 +124,30 @@ class RemoteController extends ActionController
         return $response;
     }
 
-    public function search($temp, $word)
+    private function zeedClient()
     {
+        $configuration = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('Dkd\\SemanticImages\\Configuration');
+        $remoteHost = $configuration->getZeedHost();
+        return new \GuzzleHttp\Client(['base_url' => $remoteHost]);
+    }
+
+    private function searchCall($images, $text)
+    {
+        $result = $this->client()->get('methodGET', ['query' => [
+            'imgPath' => $images['url'],
+            'diary' => $text['url']
+        ]]);
+
+        $xmlstring = (string) $result->getBody();
+        $xml = simplexml_load_string($xmlstring);
+
+        return $xml;
+    }
+
+    public function search($images, $text)
+    {
+        $xml = $this->searchCall($images, $text);
+
         return [370, 371, 373];
     }
 }

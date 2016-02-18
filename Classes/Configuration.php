@@ -24,12 +24,23 @@ class Configuration implements \TYPO3\CMS\Core\SingletonInterface {
     }
 
     /**
-     * Get Annotation Host
+     * Get Analysis Host
      *
      * @return string
      */
-    public function getRemoteHost()
+    public function getAnalysisHost()
     {
-        return $this->settings['remoteHost'];
+        return $this->settings['analysisHost'];
     }
+
+    /**
+     * Get Zeed Host
+     *
+     * @return string
+     */
+    public function getZeedHost()
+    {
+        return $this->settings['zeedHost'];
+    }
+
 }

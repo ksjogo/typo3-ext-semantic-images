@@ -1,2 +1,5 @@
-# cat=basic; type=string; label=Were the remote host lies
-remoteHost = http://multimedia.iti.gr:8080/ForgetITImageAnalysis_v3/EXTRACTOR/
+# cat=basic; type=string; label=Were the remote analysis host lies
+analysisHost = http://multimedia.iti.gr:8080/ForgetITImageAnalysis_v3/EXTRACTOR/
+
+# cat=basic; type=string; label=Were the remote zeed host lies
+zeedHost = http://multimedia.iti.gr:8080/Zero_example_event_detection/EXTRACTOR/
