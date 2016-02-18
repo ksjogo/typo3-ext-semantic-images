@@ -20,7 +20,6 @@ class RemoteController extends ActionController
     {
         $configuration = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('Dkd\\SemanticImages\\Configuration');
         $remoteHost = $configuration->getRemoteHost();
-        error_log($remoteHost);
         return new \GuzzleHttp\Client(['base_url' => $remoteHost]);
     }
 
@@ -116,13 +115,18 @@ class RemoteController extends ActionController
     }
 
     public function calculateConceptsAjax(ServerRequestInterface $request, ResponseInterface $response)
-{
-    $params = $request->getParsedBody();
-    $uid = $params['uid'];
+    {
+        $params = $request->getParsedBody();
+        $uid = $params['uid'];
 
-    $concepts = $this->calculateConcepts($uid);
+        $concepts = $this->calculateConcepts($uid);
 
-    $response->getBody()->write(json_encode($concepts));
-    return $response;
-}
+        $response->getBody()->write(json_encode($concepts));
+        return $response;
+    }
+
+    public function search($temp, $word)
+    {
+        return [370, 371, 373];
+    }
 }

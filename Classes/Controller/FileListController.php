@@ -9,6 +9,8 @@ use TYPO3\CMS\Core\Resource\FolderInterface;
 use TYPO3\CMS\Core\Resource\FileInterface;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use \ZipArchive;
+use Dkd\SemanticImages\Utility;
+use Dkd\SemanticImages\Controller\RemoteController;
 
 /**
  * Semantic Images FileListController Wrapper
@@ -98,35 +100,47 @@ class FileListController extends \TYPO3\CMS\Filelist\Controller\FileListControll
             $this->forward('index');
         }
 
-        $fileFacades = [];
-        $files = $this->fileRepository->searchByName($this->folderObject, $searchWord);
+        $temp = $this->createZipArchiveForCurrentFolder();
+        $remoteController = GeneralUtility::makeInstance(RemoteController::class);
+        $uids = $remoteController->search($temp, $searchWord);
+        Utility::removePublicTempFile($temp);
 
-        if (empty($files)) {
+        $files = array_map(function($uid){
+            return Utility::uid2file($uid);
+        }, $uids);
+        $fileFacades = [];
+        if (empty($files))
+        {
             $this->controllerContext->getFlashMessageQueue('core.template.flashMessages')->addMessage(
                 new FlashMessage("Nothing found!", '', FlashMessage::INFO)
             );
-        } else {
-            foreach ($files as $file) {
+        }
+        else
+        {
+            foreach ($files as $file)
                 $fileFacades[] = new \TYPO3\CMS\Filelist\FileFacade($file);
-            }
         }
 
         $pageRenderer = $this->view->getModuleTemplate()->getPageRenderer();
         $pageRenderer->loadRequireJsModule('TYPO3/CMS/Filelist/FileList');
-
-        $this->view->assign('searchWord', $searchWord . "123");
+        $this->view->assign('searchWord', $searchWord);
         $this->view->assign('files', $fileFacades);
-        $this->view->assign('settings', [
-            'jsConfirmationDelete' => $this->getBackendUser()->jsConfirmation(JsConfirmation::DELETE)
-        ]);
-
-
-        $this->createZipArchiveForCurrentFolder();
     }
 
-
-
-
+    /**
+     * Build zip for current folder
+     * only supporting fileadmin for now
+     * @return void
+     */
+    private function createZipArchiveForCurrentFolder()
+    {
+        $temp = Utility::createPublicTempFile($this->folderObject->getName(),'.zip');
+        $zip = new ZipArchive();
+        $zip->open($temp['name'], ZipArchive::CREATE);
+        $this->addToZip($this->folderObject, $zip);
+        $zip->close();
+        return $temp;
+    }
 
     private function addToZip($fileOrFolder, $zip)
     {
@@ -139,34 +153,8 @@ class FileListController extends \TYPO3\CMS\Filelist\Controller\FileListControll
         }
         else if ($fileOrFolder instanceof FileInterface)
         {
-            $path = $fileOrFolder->getParentFolder()->getReadablePath() . $fileOrFolder->getName();
+            $path = $fileOrFolder->getUid() . '.' . $fileOrFolder->getExtension();
             $zip->addFromString($path, $fileOrFolder->getContents());
         }
-
-
     }
-
-    /**
-     * Build zip for current folder
-     * only supporting fileadmin for now
-     * @return void
-     */
-    private function createZipArchiveForCurrentFolder()
-    {
-        $ourName = 'si' . $this->folderObject->getName();
-        $filename = GeneralUtility::tempnam($ourName, '.zip');
-        error_log(var_export($filename,true));
-
-        $zip = new ZipArchive();
-        $zip->open($filename, ZipArchive::CREATE);
-        $this->addToZip($this->folderObject, $zip);
-        $zip->close();
-
-        //GeneralUtility::unlink_tempfile($fileName);
-    }
-
-
-
-
-
 }

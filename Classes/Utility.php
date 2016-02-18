@@ -17,10 +17,14 @@ class Utility
         ];
     }
 
+    public static function removePublicTempFile($temp)
+    {
+        GeneralUtility::unlink_tempfile($temp['name']);
+    }
 
     public static function copyToPublic($uid)
     {
-        $fileObject = ResourceFactory::getInstance()->getFileObject((integer) $uid);
+        $fileObject = Utility::uid2file($uid);
 
         $nameWithout = $fileObject->getNameWithoutExtension();
         $ext = $fileObject->getExtension();
@@ -34,6 +38,11 @@ class Utility
 
     public static function decopyFromPublic($temp)
     {
-        GeneralUtility::unlink_tempfile($temp['name']);
+        Utility::removePublicTempFile($temp);
+    }
+
+    public static function uid2file($uid)
+    {
+        return ResourceFactory::getInstance()->getFileObject((integer) $uid);
     }
 }
