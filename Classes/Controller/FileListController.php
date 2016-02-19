@@ -154,7 +154,7 @@ class FileListController extends \TYPO3\CMS\Filelist\Controller\FileListControll
             foreach($fileOrFolder->getSubfolders() as $folder)
                 $this->addToZip($folder, $zip);
         }
-        else if ($fileOrFolder instanceof FileInterface)
+        else if ($fileOrFolder instanceof FileInterface && Utility::isImage($fileOrFolder))
         {
             $path = $fileOrFolder->getUid() . '.' . $fileOrFolder->getExtension();
             $zip->addFromString($path, $fileOrFolder->getContents());

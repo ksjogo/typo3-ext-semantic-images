@@ -6,6 +6,19 @@ use TYPO3\CMS\Core\Resource\ResourceFactory;
 
 class Utility
 {
+
+    /**
+     * @var array
+     */
+    protected static $knownImageExtensions = array(
+        'jpg', 'jpeg', 'png', 'gif', 'bmp', 'tiff'
+    );
+
+    public static function getKnownImageExtensions()
+    {
+        return Utility::$knownImageExtensions;
+    }
+
     public static function createPublicTempFile($prefix,$suffix)
     {
         $fullname = GeneralUtility::tempnam($prefix, $suffix);
@@ -41,8 +54,30 @@ class Utility
         Utility::removePublicTempFile($temp);
     }
 
+    /**
+     * @param integer $uid
+     * @return File
+     * @throws FileDoesNotExistException
+     */
     public static function uid2file($uid)
     {
         return ResourceFactory::getInstance()->getFileObject((integer) $uid);
+    }
+
+    /**
+     * @param array $parameters
+     * @return boolean
+     */
+    public function isFieldEnabled(array $parameters) {
+        error_log("user func called");
+        return Utility::isImage(Utility::uid2file($parameters['record']['file'][0]));
+    }
+
+    public static function isImage($file)
+    {
+        return in_array(
+            $file->getExtension(),
+            Utility::getKnownImageExtensions()
+        );
     }
 }

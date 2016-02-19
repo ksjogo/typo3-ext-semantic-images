@@ -5,7 +5,7 @@ use TYPO3\CMS\Core\Resource\File;
 use TYPO3\CMS\Core\Resource\ResourceFactory;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Backend\Form\Element\AbstractFormElement;
-
+use Dkd\SemanticImages\Utility;
 /**
  * Generation of elements of the type "user"
  */
@@ -32,40 +32,13 @@ class SemanticImages extends AbstractFormElement
     }
 
     /**
- * @param integer $uid
- * @return File
- * @throws FileDoesNotExistException
- */
-protected function getFileObjectByUid($uid) {
-    return ResourceFactory::getInstance()->getFileObject((integer) $uid);
-}
-
-/**
- * @param array $parameters
- */
-public function renderField(array $parameters) {
-    debug($parameters);
-    $uid = $parameters['row']['file'][0];
-    $fileObject = $this->getFileObjectByUid($parameters['row']['file'][0]);
-    $name = $fileObject->getIdentifier() ;
-    return '<div data-uid="' . $uid . '" data-name="' . $name . '" class="semanticimage" />';
-}
-
-    /**
- * @var array
- */
-protected $knownImageExtensions = array(
-    'jpg', 'jpeg', 'png', 'gif', 'bmp', 'tiff'
-);
-
-/**
- * @param array $parameters
- * @return boolean
- */
-public function isFieldEnabled(array $parameters) {
-    return in_array(
-        $this->getFileObjectByUid($parameters['record']['file'][0])->getExtension(),
-        $this->knownImageExtensions
-    );
-}
+     * @param array $parameters
+     */
+    public function renderField(array $parameters) {
+        debug($parameters);
+        $uid = $parameters['row']['file'][0];
+        $fileObject = Utility::uid2file($parameters['row']['file'][0]);
+        $name = $fileObject->getIdentifier() ;
+        return '<div data-uid="' . $uid . '" data-name="' . $name . '" class="semanticimage" />';
+    }
 }

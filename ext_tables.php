@@ -31,11 +31,11 @@ $GLOBALS['TYPO3_CONF_VARS']['SYS']['formEngine']['nodeRegistry'][] = [
 
 $GLOBALS['TCA']['sys_file_metadata']['columns']['semanticimage'] = array(
     'label' => 'Semantic Image',
-    //	'displayCond' => 'USER:Dkd\\SemanticImages\\UserFunction\\TcaFieldUserFunction->isFieldEnabled',
+    //FIXME: not working?
+    //'displayCond' => 'USER:Dkd\\SemanticImages\\Utility->isFieldEnabled',
 	'config' => array(
         'renderType' => 'SemanticImages',
-        //		'userFunc' => 'Dkd\\SemanticImages\\UserFunction\\TcaFieldUserFunction->renderField'
-	)
+    )
 );
 
-\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addToAllTCAtypes('sys_file_metadata', ',--div--;Semantic Image,fileinfo,semanticimage', '', '');
+\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addToAllTCAtypes('sys_file_metadata', ',--div--;Semantic Image,semanticimage', '', '');
