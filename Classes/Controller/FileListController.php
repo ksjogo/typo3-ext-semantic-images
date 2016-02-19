@@ -10,6 +10,7 @@ use TYPO3\CMS\Core\Resource\FileInterface;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use \ZipArchive;
 use Dkd\SemanticImages\Utility;
+use Dkd\SemanticImages\FileFacade;
 use Dkd\SemanticImages\Controller\RemoteController;
 
 /**
@@ -51,7 +52,7 @@ class FileListController extends \TYPO3\CMS\Filelist\Controller\FileListControll
             ExtensionManagementUtility::extPath('filelist', 'Resources/Private/Partials/'),
         ));
 
-        $view->assign('headline', 'Semantic Search');
+        $view->assign('headline', 'ZEED');
 
         /** @var BackendTemplateView $view */
         parent::initializeView($view);
@@ -84,7 +85,7 @@ class FileListController extends \TYPO3\CMS\Filelist\Controller\FileListControll
     {
         parent::indexAction();
 
-        $headline = 'Semantic Search in ' . $this->getModuleHeadline();
+        $headline = 'ZEED in ' . $this->getModuleHeadline();
         $this->view->assign('headline', $headline);
     }
 
@@ -101,20 +102,17 @@ class FileListController extends \TYPO3\CMS\Filelist\Controller\FileListControll
         }
 
         $temp = $this->createZipArchiveForCurrentFolder();
-        $text = Utility::createPublicTempFile('text','.text');
+        $text = Utility::createPublicTempFile('text','.txt');
+        file_put_contents($text['name'], $searchWord);
 
         $remoteController = GeneralUtility::makeInstance(RemoteController::class);
-        $uids = $remoteController->search($temp, $text);
+        $mapping = $remoteController->search($temp, $text);
 
         Utility::removePublicTempFile($temp);
         Utility::removePublicTempFile($text);
 
-
-        $files = array_map(function($uid){
-            return Utility::uid2file($uid);
-        }, $uids);
         $fileFacades = [];
-        if (empty($files))
+        if (empty($mapping))
         {
             $this->controllerContext->getFlashMessageQueue('core.template.flashMessages')->addMessage(
                 new FlashMessage("Nothing found!", '', FlashMessage::INFO)
@@ -122,8 +120,8 @@ class FileListController extends \TYPO3\CMS\Filelist\Controller\FileListControll
         }
         else
         {
-            foreach ($files as $file)
-                $fileFacades[] = new \TYPO3\CMS\Filelist\FileFacade($file);
+            foreach($mapping as $uid => $score)
+                $fileFacades[] = new FileFacade(Utility::uid2file($uid), $score);
         }
 
         $pageRenderer = $this->view->getModuleTemplate()->getPageRenderer();

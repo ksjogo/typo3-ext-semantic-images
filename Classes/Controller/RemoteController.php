@@ -27,7 +27,7 @@ class RemoteController extends ActionController
     {
         $temp = Utility::copyToPublic($uid);
 
-        $result = $this->client()->get('methodGET', ['query' => [
+        $result = $this->analysisClient()->get('methodGET', ['query' => [
             'imagePaths' => $temp['url'],
             'method' => $method
         ]]);
@@ -133,13 +133,16 @@ class RemoteController extends ActionController
 
     private function searchCall($images, $text)
     {
-        $result = $this->client()->get('methodGET', ['query' => [
+        $result = $this->zeedClient()->get('GET', ['query' => [
             'imgPath' => $images['url'],
             'diary' => $text['url']
         ]]);
 
         $xmlstring = (string) $result->getBody();
         $xml = simplexml_load_string($xmlstring);
+
+        error_log("xml found");
+        error_log($xml);
 
         return $xml;
     }
@@ -148,6 +151,15 @@ class RemoteController extends ActionController
     {
         $xml = $this->searchCall($images, $text);
 
-        return [370, 371, 373];
+        $mapping = [];
+        $imageList = $xml->Image_list;
+        foreach ($imageList->children() as $node)
+        {
+            $name = preg_replace('/[^0-9]/', '', (string)$node->attributes()['filename']);
+            $score= (string) $node;
+            $mapping[$name] = $score;
+        }
+
+        return $mapping;
     }
 }
