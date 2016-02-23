@@ -34,8 +34,8 @@ class SemanticImages extends AbstractFormElement
     /**
      * @param array $parameters
      */
-    public function renderField(array $parameters) {
-        debug($parameters);
+    public function renderField(array $parameters)
+    {
         $uid = $parameters['row']['file'][0];
         $fileObject = Utility::uid2file($parameters['row']['file'][0]);
         $name = $fileObject->getIdentifier() ;
