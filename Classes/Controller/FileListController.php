@@ -97,9 +97,8 @@ class FileListController extends \TYPO3\CMS\Filelist\Controller\FileListControll
      */
     public function searchAction($searchWord = '')
     {
-        if (empty($searchWord)) {
+        if (empty($searchWord))
             $this->forward('index');
-        }
 
         $temp = $this->createZipArchiveForCurrentFolder();
         $text = Utility::createPublicTempFile('text','.txt');

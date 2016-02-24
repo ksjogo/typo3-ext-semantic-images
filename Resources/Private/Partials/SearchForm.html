@@ -1,0 +1,35 @@
+<script type="text/javascript">
+ require([
+     'TYPO3/CMS/SemanticImages/Zeed',
+     'jquery',
+     'TYPO3/CMS/SemanticImages/reacttoken'
+ ], function(
+     Zeed,
+     $,
+     Reacttoken
+ ){
+     if (HTMLCollection.prototype[Symbol.iterator] ==  null)
+         HTMLCollection.prototype[Symbol.iterator] = Array.prototype[Symbol.iterator];
+     $(document).ready(function(){
+         for (var element of document.getElementsByClassName('zeed-host'))
+         {
+             var real = element.nextSibling.nextSibling;
+             var vals = real.value.length > 0 ? real.value.split(', ') : null;
+             Reacttoken.React.default.render(Reacttoken.React.default.createElement(Zeed, {real: real, defaultValues:vals}), element);
+         }
+     });
+ });
+</script>
+
+<f:form action="search" class="form-inline form-inline-spaced">
+    <div class="form-group">
+		    <div class="input-group">
+			      <input type="hidden" name="cmd" class="form-control" value="search">
+            <div class="zeed-host"></div>
+            <f:form.hidden  name="searchWord" class="form-control" value="{searchWord}" />
+            <span class="input-group-btn">
+				        <button class="btn btn-default" type="submit"><f:translate id="search">Search</f:translate></button>
+            </span>
+        </div>
+	  </div>
+</f:form>
