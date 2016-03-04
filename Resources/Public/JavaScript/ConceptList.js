@@ -3,7 +3,7 @@
  * @name ConceptList.js
  * @author Johannes Goslar
  */
-define('TYPO3/CMS/SemanticImages/ConceptList', [
+define([
 ], function (
 ) {
     return ['ATM',

@@ -3,10 +3,10 @@
  * @name Api.js
  * @author Johannes Goslar
  */
-define('TYPO3/CMS/SemanticImages/Zeed', [
+define([
     'jquery',
-    'TYPO3/CMS/SemanticImages/reacttoken',
-    'TYPO3/CMS/SemanticImages/ConceptList',
+    './reacttoken',
+    './ConceptList',
 ], function (
     $,
     Reacttoken,

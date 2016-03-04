@@ -3,10 +3,10 @@
  * @name Api.js
  * @author Johannes Goslar
  */
-define('TYPO3/CMS/SemanticImages/Form', [
+define([
     'jquery',
-    'TYPO3/CMS/SemanticImages/react',
-    'TYPO3/CMS/SemanticImages/UI'
+    './react',
+    './UI'
 ], function (
     $,
     React,

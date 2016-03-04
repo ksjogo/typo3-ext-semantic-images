@@ -3,7 +3,7 @@
  * @name Remote.js
  * @author Johannes Goslar
  */
-define('TYPO3/CMS/SemanticImages/Remote', [
+define([
     'jquery'
 ], function (
     $
