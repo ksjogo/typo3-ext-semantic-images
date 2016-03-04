@@ -5,7 +5,7 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Mvc\Controller\ActionController;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use Dkd\SemanticImages\Services\CalculateService;
+use Dkd\SemanticImages\Service\CalculateService;
 
 /**
  * Remote Controller of the Semantic Images extension
@@ -31,7 +31,7 @@ class RemoteController extends ActionController
         $params = $request->getParsedBody();
         $uid = $params['uid'];
 
-        $concepts = GeneralUtility::make(CalculateService::class)->concepts($uid);
+        $concepts = GeneralUtility::makeInstance(CalculateService::class)->concepts($uid);
 
         $response->getBody()->write(json_encode($concepts));
         return $response;
