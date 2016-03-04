@@ -12,6 +12,7 @@ use \ZipArchive;
 use Dkd\SemanticImages\Utility;
 use Dkd\SemanticImages\FileFacade;
 use Dkd\SemanticImages\Controller\RemoteController;
+use Dkd\SemanticImages\Service\CalculateService;
 
 /**
  * Semantic Images FileListController Wrapper
@@ -104,7 +105,7 @@ class FileListController extends \TYPO3\CMS\Filelist\Controller\FileListControll
         $text = Utility::createPublicTempFile('text','.txt');
         file_put_contents($text['name'], $searchWord);
 
-        $remoteController = GeneralUtility::makeInstance(RemoteController::class);
+        $remoteController = GeneralUtility::makeInstance(CalculateService::class);
         $mapping = $remoteController->search($temp, $text);
 
         Utility::removePublicTempFile($temp);
