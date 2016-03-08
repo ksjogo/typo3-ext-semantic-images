@@ -22,7 +22,6 @@ if (TYPO3_MODE === 'BE')
 
 \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addStaticFile($_EXTKEY, 'Configuration/TypoScript', 'Semantic Images');
 
-
 $GLOBALS['TYPO3_CONF_VARS']['SYS']['formEngine']['nodeRegistry'][] = [
     'nodeName' => 'SemanticImages',
     'class' =>'Dkd\\SemanticImages\\Form\\Element\\SemanticImages',
@@ -31,11 +30,20 @@ $GLOBALS['TYPO3_CONF_VARS']['SYS']['formEngine']['nodeRegistry'][] = [
 
 $GLOBALS['TCA']['sys_file_metadata']['columns']['semanticimage'] = array(
     'label' => 'Semantic Image',
-    //FIXME: not working?
-    //'displayCond' => 'USER:Dkd\\SemanticImages\\Utility->isFieldEnabled',
-	'config' => array(
+    'config' => array(
         'renderType' => 'SemanticImages',
     )
 );
 
-\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addToAllTCAtypes('sys_file_metadata', ',--div--;Semantic Image,semanticimage', '', '');
+$GLOBALS['TCA']['sys_file_metadata']['columns']['semanticimageinfo'] = array(
+    'config' => array(
+        'type' => 'user',
+        'userFunc' => 'TYPO3\\CMS\\Core\\Resource\\Hook\\FileInfoHook->renderFileMetadataInfo'
+    )
+);
+
+\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addToAllTCAtypes(
+    'sys_file_metadata',
+    ',--div--;Semantic Image, semanticimageinfo, semanticimage',
+    \TYPO3\CMS\Core\Resource\File::FILETYPE_IMAGE
+);

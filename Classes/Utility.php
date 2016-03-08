@@ -64,15 +64,6 @@ class Utility
         return ResourceFactory::getInstance()->getFileObject((integer) $uid);
     }
 
-    /**
-     * @param array $parameters
-     * @return boolean
-     */
-    public function isFieldEnabled(array $parameters) {
-        error_log("user func called");
-        return Utility::isImage(Utility::uid2file($parameters['record']['file'][0]));
-    }
-
     public static function isImage($file)
     {
         return in_array(
