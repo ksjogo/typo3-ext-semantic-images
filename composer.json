@@ -19,6 +19,7 @@
     },
     "require": {
         "typo3/cms": "^7.6",
-        "guzzlehttp/guzzle": "~5.0"
+        "guzzlehttp/guzzle": "~5.0",
+        "dkd/cmis-service": "*"
     }
 }
