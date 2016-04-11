@@ -86,9 +86,9 @@ class ContentStreamUploadedEventListener implements EventListenerInterface
 	protected function getCalculationService()
 	{
 		// temporary fake return to call the two methods below. Replace with commented-out line in final.
-		return $this;
-		//return GeneralUtility::makeInstance(CalculateService::class);
-	}
+        //return $this;
+        return GeneralUtility::makeInstance(CalculateService::class);
+    }
 
 	/**
 	 * @param integer $uid

@@ -75,9 +75,22 @@ class CalculateService implements \TYPO3\CMS\Core\SingletonInterface
             $displayName = (string) $node;
             $displayNames[$id] = $displayName;
         }
+        foreach ($qa->Concepts_list_annotation->children() as $node)
+        {
+            $id = (string)$node->attributes()['id'];
+            $displayName = (string) $node;
+            $displayNames[$id] = $displayName;
+        }
+        $displayNames = array_map(function($name){
+            $name = explode(',', $name)[0];
+            $name = str_replace('_', ' ', $name);
+            return strtolower($name);
+        }, $displayNames);
 
         $order = explode(' ',$qa->Concepts_order);
+        $orderAnnotation = explode(' ',$qa->Concepts_order_annotation);
         $scores = explode(' ', $qa->Image_Concepts_List->Image->confidence_scores);
+        $scoresAnnotation = explode(' ', $qa->Image_Concepts_List->Image->confidence_scores_annotation);
 
         for ($i = 0; $i < count($scores); $i++)
         {
@@ -86,6 +99,18 @@ class CalculateService implements \TYPO3\CMS\Core\SingletonInterface
             $label = $displayNames[$labelId];
             $result[$label] = $score;
         }
+
+        for ($i = 0; $i < count($scores); $i++)
+        {
+            $score = $scoresAnnotation[$i];
+            $labelId = $orderAnnotation[$i];
+            $label = $displayNames[$labelId];
+            $result[$label] = $score;
+        }
+
+        $result = array_filter($result, function($confidence){
+            return $confidence >=0.3;
+        });
 
         return $result;
     }
