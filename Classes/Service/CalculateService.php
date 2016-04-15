@@ -144,6 +144,7 @@ class CalculateService implements \TYPO3\CMS\Core\SingletonInterface
 
         $mapping = [];
         $imageList = $xml->Image_list;
+
         foreach ($imageList->children() as $node)
         {
             $name = preg_replace('/[^0-9]/', '', (string)$node->attributes()['filename']);

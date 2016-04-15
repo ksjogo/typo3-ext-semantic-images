@@ -5,34 +5,26 @@
  */
 define([
     'jquery',
-    './reacttoken',
-    './ConceptList',
+    './react',
 ], function (
     $,
-    Reacttoken,
-    ConceptList
+    React
 ) {
-    var React = Reacttoken.React.default;
     return React.createClass({
         getInitialState: function(){
             return {
+                value: this.props.real.value
             };
         },
-        onChange: function(){
-            var self = this;
-            window.setTimeout(function(){
-                self.props.real.value = self.refs.token.state.values.join(', ');
-            });
+        onChange: function(event){
+            this.setState({value: event.target.value});
+            this.props.real.value = event.target.value;
         },
         render: function(){
-            return React.createElement(Reacttoken, {
+            return React.createElement('textarea', {
                 className: 'form-control',
-                ref: 'token',
-                onAdd: this.onChange,
-                onRemove: this.onChange,
-                placeholder: 'type for concepts',
-                defaultValues: this.props.defaultValues,
-                options: ConceptList
+                onChange: this.onChange,
+                value: this.state.value
             });
         }
     });
